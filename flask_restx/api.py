@@ -97,6 +97,7 @@ class Api(object):
     :param url_scheme: If set to a string (e.g. http, https), then the specs_url and base_url will explicitly use this
         scheme regardless of how the application is deployed. This is necessary for some deployments behind a reverse
         proxy.
+    :param str default_swagger_filename: The default swagger filename.
     """
 
     def __init__(
@@ -127,6 +128,7 @@ class Api(object):
         serve_challenge_on_401=False,
         format_checker=None,
         url_scheme=None,
+        default_swagger_filename="swagger.json",
         **kwargs
     ):
         self.version = version
@@ -157,6 +159,7 @@ class Api(object):
         self._refresolver = None
         self.format_checker = format_checker
         self.namespaces = []
+        self.default_swagger_filename = default_swagger_filename
 
         self.ns_paths = dict()
 
@@ -299,7 +302,7 @@ class Api(object):
                 app_or_blueprint,
                 SwaggerView,
                 self.default_namespace,
-                "/swagger.json",
+                "/" + self.default_swagger_filename,
                 endpoint=endpoint,
                 resource_class_args=(self,),
             )
