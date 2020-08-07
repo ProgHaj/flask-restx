@@ -94,6 +94,7 @@ class Api(object):
     :param FormatChecker format_checker: A jsonschema.FormatChecker object that is hooked into
         the Model validator. A default or a custom FormatChecker can be provided (e.g., with custom
         checkers), otherwise the default action is to not enforce any format validation.
+    :param str defaullt_swagger_filename: The default swagger filename.
     """
 
     def __init__(
@@ -123,6 +124,7 @@ class Api(object):
         catch_all_404s=False,
         serve_challenge_on_401=False,
         format_checker=None,
+        default_swagger_filename="swagger.json",
         **kwargs
     ):
         self.version = version
@@ -153,6 +155,7 @@ class Api(object):
         self._refresolver = None
         self.format_checker = format_checker
         self.namespaces = []
+        self.default_swagger_filename = default_swagger_filename
 
         self.ns_paths = dict()
 
@@ -293,7 +296,7 @@ class Api(object):
                 app_or_blueprint,
                 SwaggerView,
                 self.default_namespace,
-                "/swagger.json",
+                "/" + self.default_swagger_filename,
                 endpoint=endpoint,
                 resource_class_args=(self,),
             )
